@@ -240,6 +240,17 @@ $gvstock_obat=GridView::widget([
   'striped'=>true,
 ]);
 
+Modal::begin([    
+         'id' => 'modalstock',   
+         'header' => '<div style="float:left;margin-right:10px" class="fa fa-2x fa-plus"></div><div><h4 class="modal-title">'.Html::encode('Stok Obat').'</h4></div>', 
+     // 'size' => Modal::SIZE_, 
+         'headerOptions'=>[   
+                 'style'=> 'border-radius:5px; background-color: rgba(90, 171, 255, 0.7)',    
+         ],   
+     ]);    
+    echo "<div id='modalContentstock'></div>";
+  Modal::end();
+
       
 
 ?>
@@ -247,20 +258,51 @@ $gvstock_obat=GridView::widget([
     <?= $gvstock_obat ?>
 </div>
 <?php
+$this->registerJs("$.fn.modal.Constructor.prototype.enforceFocus = function(){};  
+    $(document).on('click','#stock-id-create', function(ehead){        
+      $('#modalstock').modal('show')
+      .find('#modalContentstock').html('<i class=\"fa fa-2x fa-spinner fa-spin\"></i>')
+      .load(ehead.target.value);
+    });",View::POS_READY);
 
-echo \Yii::$app->view->renderFile('@backend/stock/views/stock-header/modal_stock_header.php'); // view modal
 
-$urls = [
-    'deleteurlstockheader' => Url::toRoute(['/stock/stock-header/pilih-delete']),
-];
 
-$this->registerJs(
-    "var yiiOptions = ".\yii\helpers\Json::htmlEncode($urls).";",
-    View::POS_HEAD,
-    'yiiOptions'
-);
 
-$this->registerJs($this->render('all_stock_header.js'),View::POS_READY);
+/** *js export if click then export 
+    *@author adityia@lukison.com
 
+**/
+$this->registerJs("
+$(document).on('click', '[data-toggle-delete-erp]', function(e){
+
+  e.preventDefault();
+  var keysSelect1 = $('#gv-stok-header-obat-id').yiiGridView('getSelectedRows');
+
+  if(keysSelect1 == '')
+  {
+    alert('sorry your not selected item');
+  }else{
+
+  $.ajax({
+           url: '".Url::toRoute(['/stock/stock-header/pilih-delete'])."',
+           //cache: true,
+           type: 'POST',
+           data:{keysSelect:keysSelect1},
+           dataType: 'json',
+           success: function(result) {
+             if (result == 1){
+                 $.pjax.reload('#gv-type-obat-id');
+
+             }
+              else {
+                alert('Item already exists ');
+              }
+            }
+          });
+        }
+
+})
+
+",$this::POS_READY);
 ?>
 
