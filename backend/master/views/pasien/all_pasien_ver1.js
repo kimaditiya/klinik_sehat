@@ -22,14 +22,11 @@ $.fn.modal.Constructor.prototype.enforceFocus = function(){};
 	    $('#submit-pasien').click(function(){
 	     /* when the submit button in the modal is clicked, submit the form */
 	     $.ajax({
-	             url: yiiOptionspasien.deleteurlpasien,
+	             url: yiiOptions.deleteurlpasien,
 	             //cache: true,
 	             type: 'POST',
 	             data:{keysSelect:keysSelect1},
 	             dataType: 'json',
-	             beforeSend: function() {
-	        		$("#tes").show();
-            		},
 	             success: function(result) {
 	               if (result == 1){
 	                   $.pjax.reload('#gv-pasien-id');
@@ -57,12 +54,8 @@ $.fn.modal.Constructor.prototype.enforceFocus = function(){};
 	  }else{
 	     $.ajax({
 	        beforeSend: function() {
-	        	$("#tes").show();
-            	location.href = yiiOptionspasien.exporturlpasien+'?idx='+keysSelect1;
-            	},
-            complete: function(){
-     			$("#tes").hide();
-  				 },        
+            	location.href = yiiOptions.exporturlpasien+'?idx='+keysSelect1;
+            	},        
 	        });
 	  	}; 
 

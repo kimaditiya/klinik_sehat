@@ -6,7 +6,6 @@ use kartik\grid\GridView;
 use yii\helpers\Url;
 use yii\bootstrap\Modal;
 use yii\web\View;
-use kartik\widgets\Spinner;
 
 /* @var $this yii\web\View */
 /* @var $searchModel backend\master\models\PasienSearch */
@@ -134,8 +133,6 @@ function tombolCreate(){
       return $content = Html::a($label,'#',$options);
      
     }
-
-$loading_spinner = Spinner::widget(['preset' => 'large', 'align' => 'center','color' => 'blue', 'caption' => 'Loading','id'=>'tes','hidden'=>true]);
 
 
     /**
@@ -432,7 +429,7 @@ foreach($gvHeadColomnBT as $key =>$value[]){
   'panel' => [
         'heading'=>false,
         'type'=>'info',
-        'before'=>$loading_spinner.tombolCreate().' '.tombolRefresh(),
+        'before'=> tombolCreate().' '.tombolRefresh(),
         'showFooter'=>false,
   ],
   /* 'export' =>['target' => GridView::TARGET_BLANK],
@@ -464,11 +461,10 @@ foreach($gvHeadColomnBT as $key =>$value[]){
  
   <?= $gvpasien ?>
 
-
-
 </div>
 
 <?php
+
 
 echo \Yii::$app->view->renderFile('@backend/master/views/pasien/modal_pasien.php'); // view modal
 
@@ -479,9 +475,9 @@ $urls = [
 ];
 
 $this->registerJs(
-    "var yiiOptionspasien = ".\yii\helpers\Json::htmlEncode($urls).";",
+    "var yiiOptions = ".\yii\helpers\Json::htmlEncode($urls).";",
     View::POS_HEAD,
-    'yiiOptionspasien'
+    'yiiOptions'
 );
 
 
