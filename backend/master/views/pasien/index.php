@@ -34,21 +34,21 @@ function tombolCreate(){
      }
 
 
-
+    #tombol refesh
  function tombolRefresh(){
       $title = Yii::t('app', 'Refresh');
       $url =  Url::toRoute(['/master/pasien/']);
       $options = ['id'=>'pasien-id-refresh',
                   'data-pjax' => 0,
-                  'class'=>"btn btn-info btn-xs",
+                  'class'=>"btn btn-warning btn-xs",
                 ];
-      $icon = '<span class="fa fa-history fa-lg"></span>';
+      $icon = '<span class="glyphicon glyphicon-refresh"></span>';
       $label = $icon . ' ' . $title;
 
       return $content = Html::a($label,$url,$options);
     }
 
-
+    #tombol review
     function tombolReview($url,$model){
       $title = Yii::t('app', 'Review');
       $url =  Url::toRoute(['/master/pasien/review-pasien','id'=>$model->id]);
@@ -71,7 +71,7 @@ function tombolCreate(){
         $title = Yii::t('app', 'View');
         $icon = '<span class="fa fa-eye"></span>';
         $label = $icon . ' ' . $title;
-        $url = Url::toRoute(['/master/pasien/view','id'=>$model->kd_pasien]);
+        $url = Url::toRoute(['/master/pasien/view','id'=>$model->id]);
         $options1 = ['value'=>$url,
                     'id'=>'view-pasien-id',
                     'class'=>"btn btn-default btn-xs",      
@@ -90,24 +90,24 @@ function tombolCreate(){
         $title = Yii::t('app', 'Edit');
         $icon = '<span class="fa fa-edit"></span>';
         $label = $icon . ' ' . $title;
-        $url = Url::toRoute(['/master/pasien/edit','id'=>$model->kd_pasien]);
+        $url = Url::toRoute(['/master/pasien/update','id'=>$model->id]);
         $options1 = ['value'=>$url,
                     'id'=>'edit-pasien-id',
                     'class'=>"btn btn-default btn-xs",      
-                    'style'=>['width'=>'170px', 'height'=>'25px','border'=>'none','background-color'=>'white'],  
-                ];
+                    'style'=>['width'=>'170px', 'height'=>'25px','border'=> 'none','background-color'=>'white'],  
+                  ];
         $content = Html::button($label,$options1);
         return $content;
     }
 
-    /*
+  /*
    * Tombol Delete
   */
   function tombolDelete(){
       $title = Yii::t('app', 'Delete');
       $options = ['id'=>'pasien-id-delete',
                   'data-pjax' => 0,
-                  'data-toggle-delete-erp'=>'pasien-delete',
+                  'data-toggle-delete-erp-pasien'=>'pasien-delete',
                   'class'=>"btn btn-danger btn-xs",
                 ];
       $icon = '<span class="fa fa-trash fa-lg"></span>';
@@ -118,14 +118,14 @@ function tombolCreate(){
     }
 
 
-     /*
+ /*
    * Tombol export
   */
   function tombolExport(){
       $title = Yii::t('app', 'Export');
       $options = ['id'=>'pasien-id-export',
                   'data-pjax' => true,
-                  'data-toggle-export-erp'=>'pasien-export',
+                  'data-toggle-export-erp-pasien'=>'pasien-export',
                   'class'=>"btn btn-success btn-xs",
                 ];
       $icon = '<span class="fa fa-file-excel-o fa-lg"></span>';
@@ -135,7 +135,18 @@ function tombolCreate(){
      
     }
 
-$loading_spinner = Spinner::widget(['preset' => 'large', 'align' => 'center','color' => 'blue', 'caption' => 'Loading','id'=>'tes','hidden'=>true]);
+  #status data pasien
+  function Status($model){
+      if ($model->status == 1){
+            return html::label('<span class="fa fa-check fa-1x"></span>','',['style'=>['color'=>'green']]);
+        }else if($model->status == 0){
+            return html::label('<span class="fa fa-remove fa-1x"></span>','',['style'=>['color'=>'red']]);
+       }
+
+  }
+
+  #spinner_loading
+  $loading_spinner = Spinner::widget(['preset' => 'large', 'align' => 'center','color' => 'blue', 'caption' => 'Loading','id'=>'pasien-loading-id','hidden'=>true]);
 
 
     /**
@@ -155,7 +166,7 @@ $headColomnBT=[
     // ['ID' =>4, 'ATTR' =>['FIELD'=>'alamat','SIZE' => '30px','label'=>'Alamat','align'=>'left','warna'=>'73, 162, 182, 1','grp'=>false]],
     ['ID' =>4, 'ATTR' =>['FIELD'=>'telp','SIZE' => '30px','label'=>'Telpon','align'=>'left','warna'=>'73, 162, 182, 1','grp'=>false]],
     ['ID' =>5, 'ATTR' =>['FIELD'=>'nomer_alias_pasien','SIZE' => '30px','label'=>'Nomer Pasien Lama','align'=>'left','warna'=>'73, 162, 182, 1','grp'=>false]],
-    ['ID' =>6, 'ATTR' =>['FIELD'=>'status','SIZE' => '30px','label'=>'Status','align'=>'left','warna'=>'73, 162, 182, 1','grp'=>false]],
+    ['ID' =>6, 'ATTR' =>['FIELD'=>'status','SIZE' => '30px','label'=>'Status','align'=>'center','warna'=>'73, 162, 182, 1','grp'=>false]],
     ];
 
 $gvHeadColomnBT = ArrayHelper::map($headColomnBT, 'ID', 'ATTR');
@@ -239,11 +250,7 @@ foreach($gvHeadColomnBT as $key =>$value[]){
         'filterInputOptions'=>['placeholder'=>'Pilih'],
          'format' => 'raw',
         'value'=>function($model){
-                   if ($model->status == 1) {
-                        return Html::a('<i class="fa fa-check"></i> &nbsp;InActive', '',['class'=>'btn btn-success btn-xs', 'title'=>'InActive']);
-                    } else if ($model->status == 0) {
-                        return Html::a('<i class="fa fa-close"></i> &nbsp;Active', '',['class'=>'btn btn-danger btn-xs', 'title'=>'Active']);
-                    }
+                  return status($model);
                 },
         'hAlign'=>'right',
         'vAlign'=>'middle',
@@ -290,6 +297,32 @@ foreach($gvHeadColomnBT as $key =>$value[]){
           // Refresh Display
           'displayValueConfig' =>$data_agama,
         ],
+        'hAlign'=>'right',
+        'vAlign'=>'middle',
+        'noWrap'=>true,
+        'headerOptions'=>[
+            'style'=>[
+                'text-align'=>'center',
+                'width'=>$value[$key]['SIZE'],
+                'font-family'=>'tahoma, arial, sans-serif',
+                'font-size'=>'8pt',
+                'background-color'=>'rgba('.$value[$key]['warna'].')',
+            ]
+        ],
+        'contentOptions'=>[
+            'style'=>[
+                'width'=>$value[$key]['SIZE'],
+                'text-align'=>$value[$key]['align'],
+                'font-family'=>'tahoma, arial, sans-serif',
+                'font-size'=>'8pt',
+            ]
+        ],
+    ];
+
+  }elseif($value[$key]['FIELD'] == 'kd_pasien'){
+    $attDinamik[]=[
+        'attribute'=>$value[$key]['FIELD'],
+        'label'=>$value[$key]['label'],
         'hAlign'=>'right',
         'vAlign'=>'middle',
         'noWrap'=>true,
@@ -470,6 +503,7 @@ foreach($gvHeadColomnBT as $key =>$value[]){
 
 <?php
 
+
 echo \Yii::$app->view->renderFile('@backend/master/views/pasien/modal_pasien.php'); // view modal
 
 
@@ -485,6 +519,6 @@ $this->registerJs(
 );
 
 
-$this->registerJs($this->render('all_pasien.js'),View::POS_READY);
+$this->registerJs($this->render('all_pasien.js'),View::POS_READY); // js all pasien
 
 ?>

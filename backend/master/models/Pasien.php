@@ -46,7 +46,7 @@ class Pasien extends \yii\db\ActiveRecord
             [['kd_pasien'], 'string', 'max' => 50],
             [['nama_pasien', 'pekerjaan'], 'string', 'max' => 225],
             [['telp'], 'integer'],
-            [['nomer_alias_pasien'],'unique']
+            ['telp', 'unique']
         ];
     }
 

@@ -22,23 +22,23 @@ $config = ['template'=>"{input}\n{error}\n{hint}"];
     ]); ?>
 
 
-    <?= $form->field($model, 'tgl')->widget(DatePicker::classname(), [
+    <?= $form->field($model, 'tanggal')->widget(DatePicker::classname(), [
         'options' => ['placeholder' => 'Enter date ...'],
         'pluginOptions' => [
             'autoclose'=>true,
             'todayHighlight' => true,
             'convertFormat' => true,
-            'format' => 'yyyy-m-d',
+            'format' => 'yyyy-mm-d',
             // 'format'=>'yyyy-m-d h:i:s'
         ]
     ]) ?>
 
 
-    <?= $form->field($model, 'ck_fisik', $config)->widget(LabelInPlace::classname(), [
+    <?= $form->field($model, 'cek_fisik', $config)->widget(LabelInPlace::classname(), [
         'type' => LabelInPlace::TYPE_TEXT,
         'label'=>'<i class="glyphicon glyphicon-comment"></i> Cek Fisik',
         'encodeLabel'=>false,
-        'options' => ['class'=>'form-control'],
+        'options' => ['id'=>'ck-visik','class'=>'form-control'],
         'pluginOptions'=>[
             'labelPosition'=>'down',
             'labelArrowDown'=>' <i class="glyphicon glyphicon-chevron-down"></i>',
@@ -51,20 +51,20 @@ $config = ['template'=>"{input}\n{error}\n{hint}"];
 
 
     <?php
-    $options = [
-        'multiple' => true,
-        'size' => 5,
-    ];
+    // $options = [
+    //     'multiple' => true,
+    //     'size' => 5,
+    // ];
     // echo $form->field($model, $attribute)->listBox($items, $options);
-    echo $form->field($model, 'k_obats')->widget(DualListbox::className(),[
-        'items' => $items,
-        'options' => $options,
-        'clientOptions' => [
-            'moveOnSelect' => false,
-            'selectedListLabel' => 'Selected Items',
-            'nonSelectedListLabel' => 'Available Items',
-        ],
-    ])->label('Nama Obat');
+    //  $form->field($model, 'k_obats')->widget(DualListbox::className(),[
+    //     'items' => $items,
+    //     'options' => $options,
+    //     'clientOptions' => [
+    //         'moveOnSelect' => false,
+    //         'selectedListLabel' => 'Selected Items',
+    //         'nonSelectedListLabel' => 'Available Items',
+    //     ],
+    // ])->label('Nama Obat');
 ?>
 
     <div class="form-group">

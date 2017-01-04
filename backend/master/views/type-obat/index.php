@@ -39,7 +39,7 @@ function tombolCreate(){
       $url =  Url::toRoute(['/master/type-obat/']);
       $options = ['id'=>'typeobat-id-refresh',
                   'data-pjax' => 0,
-                  'class'=>"btn btn-info btn-xs",
+                  'class'=>"btn btn-warning btn-xs",
                 ];
       $icon = '<span class="fa fa-history fa-lg"></span>';
       $label = $icon . ' ' . $title;
@@ -397,6 +397,12 @@ $gvtype_obat=GridView::widget([
 
 
 ?>
+<div class="row">
+    <div class="col-md-3 col-md-offset-5">
+      <h3><i class="fa fa-truck" aria-hidden="true"></i> <b><?= Html::encode('Menu Type Obat')  ?></b></h3>
+    </div>
+</div>
+
 <div class="type-obat-index">
     <?= $gvtype_obat ?>
 </div>

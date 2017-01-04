@@ -5,6 +5,7 @@ use yii\helpers\ArrayHelper;
 use kartik\grid\GridView;
 use yii\helpers\Url;
 use yii\web\View;
+use kartik\widgets\Spinner;
 
 /* @var $this yii\web\View */
 /* @var $searchModel backend\master\models\AgamaSearch */
@@ -47,7 +48,7 @@ function tombolCreate(){
       $url =  Url::toRoute(['/master/agama/']);
       $options = ['id'=>'agama-id-refresh',
                   'data-pjax' => 0,
-                  'class'=>"btn btn-info btn-xs",
+                  'class'=>"btn btn-warning btn-xs",
                 ];
       $icon = '<span class="fa fa-history fa-lg"></span>';
       $label = $icon . ' ' . $title;
@@ -56,9 +57,6 @@ function tombolCreate(){
     }
 
   
-
-  
-
     /*
    * Tombol Delete
   */
@@ -66,7 +64,7 @@ function tombolCreate(){
       $title = Yii::t('app', 'Delete');
       $options = ['id'=>'agama-id-delete',
                   'data-pjax' => 0,
-                  'data-toggle-delete-erp'=>'agama-pilih-delete',
+                  'data-toggle-delete-erp-agama'=>'agama-pilih-delete',
                   'class'=>"btn btn-danger btn-xs",
                 ];
       $icon = '<span class="fa fa-trash fa-lg"></span>';
@@ -75,6 +73,10 @@ function tombolCreate(){
       return $content = Html::a($label,'#',$options);
      
     }
+
+ #spinner_loading agama
+  $loading_spinner_agama = Spinner::widget(['preset' => 'large', 'align' => 'center','color' => 'blue', 'caption' => 'Loading','id'=>'agama-loading-id','hidden'=>true]);
+
 /**
  * GRID type obat
  * @author wawan  [aditiya@lukison.com]
@@ -191,7 +193,7 @@ $gvagama=GridView::widget([
   'panel' => [
         'heading'=>false,
         'type'=>'info',
-        'before'=> tombolCreate().' '.tombolRefresh(),
+        'before'=> $loading_spinner_agama.tombolCreate().' '.tombolRefresh(),
         'showFooter'=>false,
   ],
   /* 'export' =>['target' => GridView::TARGET_BLANK],
@@ -228,9 +230,9 @@ $urls = [
 ];
 
 $this->registerJs(
-    "var yiiOptions = ".\yii\helpers\Json::htmlEncode($urls).";",
+    "var yiiOptionsagama = ".\yii\helpers\Json::htmlEncode($urls).";",
     View::POS_HEAD,
-    'yiiOptions'
+    'yiiOptionsagama'
 );
 
 $this->registerJs($this->render('all_agama.js'),View::POS_READY);

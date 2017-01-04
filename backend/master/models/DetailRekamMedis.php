@@ -17,9 +17,8 @@ use Yii;
  */
 class DetailRekamMedis extends \yii\db\ActiveRecord
 {
-    /**
-     * @inheritdoc
-     */
+    
+
     public static function tableName()
     {
         return 'detail_rekam_medis';
@@ -31,12 +30,14 @@ class DetailRekamMedis extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['tanggal','kd_obat'], 'safe'],
+            [['tanggal'], 'safe'],
+            [['tanggal','cek_fisik'], 'required'],
             [['cek_fisik', 'tindakan'], 'string'],
             [['status','id_pasien'], 'integer'],
             [['kd_rekam_medis'], 'string', 'max' => 50],
         ];
     }
+
 
     /**
      * @inheritdoc

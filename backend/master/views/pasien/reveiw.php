@@ -16,38 +16,115 @@ $this->params['breadcrumbs'][] = $this->title;
  * Tombol Create
  *  create 
 */
-function tombolCreate($model){
-      $title1 = Yii::t('app', 'New');
-      $url = Url::toRoute(['/master/pasien/create-rekammedis','id'=>$model->id,'kd'=>$model->kdRekamheader]);
-      $options1 = ['value'=>$url,
+  function tombolCreate($modelx){
+    $title1 = Yii::t('app', 'New');
+    $url = Url::toRoute(['/master/pasien/create-rekammedis','id'=>$modelx->id,'kd'=>$modelx->kdRekamheader]);
+    $options1 = ['value'=>$url,
                     'id'=>'rekam-detail-id-create',
-                    'class'=>"btn btn-info btn-xs"  
-      ];
-      $icon1 = '<span class="fa fa-plus fa-lg"></span>';
+                    'class'=>"btn btn-info btn-xs" 
+                ];
+    $icon1 = '<span class="fa fa-plus fa-lg"></span>';
       
-      $label1 = $icon1 . ' ' . $title1;
-      $content = Html::button($label1,$options1);
-      return $content;
-     }
+    $label1 = $icon1 . ' ' . $title1;
+    $content = Html::button($label1,$options1);
+    return $content;
+  }
 
+  /*
+ * Tombol Create
+ *  create 
+*/
+  function tombolCreateDosis($model1){
+    $title1 = Yii::t('app', 'New');
+    $url = Url::toRoute(['/master/pasien/create-dosis','id'=>$model1->id_pasien,'kd'=>$model1->id]);
+    $options1 = ['value'=>$url,
+                    'id'=>'rekam-dosis-id-create',
+                    'class'=>"btn btn-success btn-xs" 
+                ];
+    $icon1 = '<span class="fa fa-plus fa-lg"></span>';
+      
+    $label1 = $icon1 . ' ' . $title1;
+    $content = Html::button($label1,$options1);
+    return $content;
+  }
 
 
   /*
    * Tombol Delete
   */
   function tombolDelete(){
-      $title = Yii::t('app', 'Delete');
-      $options = ['id'=>'rekam-detail-id-delete',
+    $title = Yii::t('app', 'Delete');
+    $options = ['id'=>'rekam-detail-dosis-id-delete',
                   'data-pjax' => 0,
-                  'data-toggle-delete-erp'=>'rekam-delete',
+                  'data-toggle-delete-erp-rekam-detail'=>'rekam-delete-dosis',
                   'class'=>"btn btn-danger btn-xs",
                 ];
-      $icon = '<span class="fa fa-trash fa-lg"></span>';
-      $label = $icon . ' ' . $title;
+    $icon = '<span class="fa fa-trash fa-lg"></span>';
+    $label = $icon . ' ' . $title;
 
-      return $content = Html::a($label,'#',$options);
+    return $content = Html::a($label,'#',$options);
      
     }
+
+  function tombolDeleteRekamDosis($url, $model){
+          $title = Yii::t('app', 'Delete');
+          $options = [ 'id'=>'delete-id-dosis-rekam',
+                 'data-pjax' => true,
+                 'data-toggle-delete-dosis'=>$model->id_dosis.','.$model->id_detail_medis,
+          ];
+          $icon = '<span class="glyphicon glyphicon-trash"></span>';
+          $label = $icon . ' ' . $title;
+          return '<li>' . Html::a($label, '' , $options) . '</li>' . PHP_EOL;
+    }
+
+     /*
+   * Tombol Delete
+  */
+  function tombolDeleteDosis(){
+    $title = Yii::t('app', 'Delete');
+    $options = ['id'=>'rekam-obat-dosis-id-delete',
+                  'data-pjax' => 0,
+                  'data-toggle-delete-erp-rekam-obat-dosis'=>'rekam-delete-dosis-obat',
+                  'class'=>"btn btn-danger btn-xs",
+                ];
+    $icon = '<span class="fa fa-trash fa-lg"></span>';
+    $label = $icon . ' ' . $title;
+
+    return $content = Html::a($label,'#',$options);
+     
+    }
+
+    
+
+
+  function tombolBack(){
+    $title = Yii::t('app', 'Back');
+    $options = ['id'=>'rekam-back-id',
+          'class' => 'btn btn-success btn-xs'
+    ];
+    $icon = '<span class="glyphicon glyphicon-repeat"></span>';
+    $label = $icon . ' ' . $title;
+    $url = Url::toRoute(['/master/pasien/']);
+    $content = Html::a($label,$url, $options);
+    return $content;
+  }
+
+
+ function tombolRefresh($modelx){
+      $title = Yii::t('app', 'Refresh');
+      $url =  Url::toRoute(['/master/pasien/review-pasien','id'=>$modelx->id]);
+      $options = ['id'=>'rekam-detail-id-refresh',
+                  'data-pjax' => 0,
+                  'class'=>"btn btn-warning btn-xs",
+                ];
+      $icon = '<span class="fa fa-history fa-lg"></span>';
+      $label = $icon . ' ' . $title;
+
+      return $content = Html::a($label,$url,$options);
+    }
+
+
+ 
 
 
  /**
@@ -62,8 +139,8 @@ $attDinamik =[];
 $headColomnBT=[
     ['ID' =>0, 'ATTR' =>['FIELD'=>'tanggal','SIZE' => '30px','label'=>'Tanggal','align'=>'left','warna'=>'73, 162, 182, 1','grp'=>false]],
     ['ID' =>1, 'ATTR' =>['FIELD'=>'cek_fisik','SIZE' => '30px','label'=>'Anamnese&Pemeriksaan fisik','align'=>'left','warna'=>'73, 162, 182, 1','grp'=>false]],
-    ['ID' =>2, 'ATTR' =>['FIELD'=>'kd_obat','SIZE' => '30px','label'=>'Obat','align'=>'left','warna'=>'73, 162, 182, 1','grp'=>false]],
-    ['ID' =>3, 'ATTR' =>['FIELD'=>'tindakan','SIZE' => '30px','label'=>'Tindakan','align'=>'left','warna'=>'73, 162, 182, 1','grp'=>false]],
+    // ['ID' =>2, 'ATTR' =>['FIELD'=>'kd_obat','SIZE' => '30px','label'=>'Obat','align'=>'left','warna'=>'73, 162, 182, 1','grp'=>false]],
+    // ['ID' =>3, 'ATTR' =>['FIELD'=>'tindakan','SIZE' => '30px','label'=>'Tindakan','align'=>'left','warna'=>'73, 162, 182, 1','grp'=>false]],
     ];
 
 $gvHeadColomnBT = ArrayHelper::map($headColomnBT, 'ID', 'ATTR');
@@ -94,9 +171,100 @@ $attDinamik[] =[
   ],
 ];
 
+$attDinamik[] =[
+      'class'=>'kartik\grid\ExpandRowColumn',
+      'width'=>'50px',
+      'header'=>'Detail',
+      'value'=>function ($model, $key, $index, $column) {
+        return GridView::ROW_COLLAPSED;
+      },
+      'detail'=>function ($model, $key, $index, $column)use($modelx) {
+        return Yii::$app->controller->renderPartial('expand_rekam_dosis',[
+          'model1'=>$model,
+          'modelx'=>$modelx,
+        ]); 
+      },
+      'collapseTitle'=>'Close Exploler',
+      'expandTitle'=>'Click to views detail',
+      //'headerOptions'=>['class'=>'kartik-sheet-style'] ,
+      // 'allowBatchToggle'=>true,
+      'expandOneOnly'=>true,
+      // 'enableRowClick'=>true,
+      //'disabled'=>true,
+      'headerOptions'=>[
+        'style'=>[ 
+          'text-align'=>'center',
+          'width'=>'10px',
+          'font-family'=>'tahoma, arial, sans-serif',
+          'font-size'=>'7pt',
+          'background-color'=>'rgba(73, 162, 182, 1)',
+        ]
+      ],
+      'contentOptions'=>[
+        'style'=>[
+          'text-align'=>'center',
+          'width'=>'10px',
+          'height'=>'10px',
+          'font-family'=>'tahoma, arial, sans-serif',
+          'font-size'=>'7pt',
+        ]
+      ],
+    ];
+
 foreach($gvHeadColomnBT as $key =>$value[]){
       # code...
+  if($value[$key]['FIELD'] == 'tanggal'){
       $attDinamik[]=[
+        'class'=>'kartik\grid\EditableColumn',
+        'attribute'=>$value[$key]['FIELD'],
+        'label'=>$value[$key]['label'],
+        'filterType'=>GridView::FILTER_DATE,
+        'filterWidgetOptions'=>[
+          'pluginOptions'=>
+              ['format' => 'yyyy-mm-d',
+                'autoclose'=>true,
+                'todayHighlight' => true,
+                'convertFormat' => true,
+            ],
+        ],
+        'filter'=>true,
+        'hAlign'=>'right',
+        'vAlign'=>'middle',
+        'noWrap'=>true,
+        'editableOptions' => [
+              'inputType' => \kartik\editable\Editable::INPUT_DATE,
+              'size' => 'xs',
+              'options' => [
+              'pluginOptions' => [
+                'autoclose'=>true,
+                'todayHighlight' => true,
+                'convertFormat' => true,
+                'format' => 'yyyy-mm-d',
+                
+                ],
+              ],    
+        ],
+        //'group'=>$value[$key]['grp'],
+        'headerOptions'=>[
+            'style'=>[
+            'text-align'=>'center',
+            'width'=>$value[$key]['SIZE'],
+            'font-family'=>'tahoma, arial, sans-serif',
+            'font-size'=>'8pt',
+            'background-color'=>'rgba('.$value[$key]['warna'].')',
+          ]
+        ],
+        'contentOptions'=>[
+          'style'=>[
+            'width'=>$value[$key]['SIZE'],
+            'text-align'=>$value[$key]['align'],
+            'font-family'=>'tahoma, arial, sans-serif',
+            'font-size'=>'8pt',
+          ]
+        ],
+      ];
+    }else{
+       $attDinamik[]=[
         'class'=>'kartik\grid\EditableColumn',
         'attribute'=>$value[$key]['FIELD'],
         'label'=>$value[$key]['label'],
@@ -123,8 +291,11 @@ foreach($gvHeadColomnBT as $key =>$value[]){
           ]
         ],
       ];
+    }
 
   };
+
+  
 
   
 
@@ -152,7 +323,7 @@ foreach($gvHeadColomnBT as $key =>$value[]){
       ],
     ];
 
-  $gvpasien=GridView::widget([
+  $gvprekam_detail=GridView::widget([
   'id'=>'gv-rekam-detail-id',
   'dataProvider' => $dataProvider,
   'filterModel' => $searchModel,
@@ -168,7 +339,7 @@ foreach($gvHeadColomnBT as $key =>$value[]){
   'panel' => [
         'heading'=>false,
         'type'=>'info',
-        'before'=> tombolCreate($model),
+        'before'=> tombolCreate($modelx).' '.tombolBack(),
         'showFooter'=>false,
   ],
   /* 'export' =>['target' => GridView::TARGET_BLANK],
@@ -176,7 +347,7 @@ foreach($gvHeadColomnBT as $key =>$value[]){
     GridView::PDF => [ 'filename' => 'kategori'.'-'.date('ymdHis') ],
     GridView::EXCEL => [ 'filename' => 'kategori'.'-'.date('ymdHis') ],
   ], */
-  'toolbar'=> ['content'=>tombolDelete(),
+  'toolbar'=> ['content'=>tombolDelete().' '.tombolRefresh($modelx)
         //'{export}',
     //'{items}',
   ],
@@ -212,13 +383,13 @@ foreach($gvHeadColomnBT as $key =>$value[]){
 				<div class="col-md-4">
 				<dl>
 				    <dt style="width:80px; float:left;">Kode Pasien</dt>
-				    <dd>: <b><?= $model->kd_pasien ?></b> </dd>
+				    <dd>: <b><?= $modelx->kd_pasien ?></b> </dd>
 					<dt style="width:80px; float:left;">Nama</dt>
-					<dd>: <b><?= $model->nama_pasien ?> </b></dd>
+					<dd>: <b><?= $modelx->nama_pasien ?> </b></dd>
 					<dt style="width:80px; float:left;">Alamat </dt>
-					<dd>: <b> <?= $model->alamat ?></b> </dd>
+					<dd>: <b> <?= $modelx->alamat ?></b> </dd>
 					<dt style="width:80px; float:left;">TLP</dt>
-					<dd>: <b><?= $model->telp ?></b> </dd>
+					<dd>: <b><?= $modelx->telp ?></b> </dd>
 				</dl>
 			</div>
 				<div class="col-md-4"></div>
@@ -243,7 +414,7 @@ foreach($gvHeadColomnBT as $key =>$value[]){
 
 			<div class="col-md-12">
 
-				<?php echo $gvpasien;?>
+				<?php echo $gvprekam_detail;?>
 			</div>
 		</div>
 	</div>
@@ -251,5 +422,16 @@ foreach($gvHeadColomnBT as $key =>$value[]){
 
 <?php
 echo \Yii::$app->view->renderFile('@backend/master/views/pasien/modal_rekam_detail.php'); // view modal
+
+$urls = [
+    'deleteurldetailmedis' => Url::toRoute(['/master/pasien/delete-detail']),
+    'deletedosis' =>Url::toRoute(['/master/pasien/delete-dosis']),
+];
+
+$this->registerJs(
+    "var yiiOptionsdetailmedis = ".\yii\helpers\Json::htmlEncode($urls).";",
+    View::POS_HEAD,
+    'yiiOptionsdetailmedis'
+);
 
 $this->registerJs($this->render('all_rekam_detail.js'),View::POS_READY);

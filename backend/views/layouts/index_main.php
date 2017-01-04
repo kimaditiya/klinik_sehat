@@ -11,7 +11,7 @@ use yii\widgets\Breadcrumbs;
 use mdm\admin\components\MenuHelper;
 use mdm\admin\models\Menu;
 use app\models\User;
-// use app\assets_b\AppAsset;
+// use backend\assets\AppAsset;
 
 // AppAsset::register($this);
 

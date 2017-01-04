@@ -18,7 +18,7 @@ class DetailRekamMedisSearch extends DetailRekamMedis
     public function rules()
     {
         return [
-            [['id', 'status'], 'integer'],
+            [['id', 'status','id_pasien'], 'integer'],
             [['kd_rekam_medis', 'tanggal', 'cek_fisik', 'kd_obat', 'tindakan'], 'safe'],
         ];
     }
@@ -41,7 +41,7 @@ class DetailRekamMedisSearch extends DetailRekamMedis
      */
     public function search($params)
     {
-        $query = DetailRekamMedis::find()->where(['kd_rekam_medis'=>$this->kd_rekam_medis]);
+        $query = DetailRekamMedis::find()->where(['id_pasien'=>$this->id_pasien]);
 
         // add conditions that should always apply here
 

@@ -39,7 +39,7 @@ function tombolCreate(){
       $url =  Url::toRoute(['/stock/stock-header/']);
       $options = ['id'=>'stock-header-obat-id-refresh',
                   'data-pjax' => 0,
-                  'class'=>"btn btn-info btn-xs",
+                  'class'=>"btn btn-warning btn-xs",
                 ];
       $icon = '<span class="fa fa-history fa-lg"></span>';
       $label = $icon . ' ' . $title;
@@ -64,6 +64,21 @@ function tombolCreate(){
 
       return $content = Html::a($label,'#',$options);
      
+    }
+
+
+  function tombolReview($url,$model){
+      $title = Yii::t('app', 'Review');
+      $url =  Url::toRoute(['/stock/stock-header/review-stock','id'=>$model->kd_stock_header]);
+      $options = ['id'=>'stock-header-id-review',
+                  'data-pjax' => 0,
+                  'class'=>"btn btn-default btn-xs",
+                  'style'=>['width'=>'170px', 'height'=>'25px','border'=> 'none','background-color'=>'white'],
+                ];
+      $icon = '<span class="fa fa-history"></span>';
+      $label = $icon . ' ' . $title;
+
+      return $content = Html::a($label,$url,$options);
     }
 
 /**
@@ -177,6 +192,46 @@ foreach($gvHeadColomnBT as $key =>$value[]){
 
   };
 
+
+  /*GRIDVIEW ARRAY ACTION*/
+  $actionClass='btn btn-info btn-xs';
+  $actionLabel='Action';
+  $attDinamik[]=[
+    'class'=>'kartik\grid\ActionColumn',
+    'dropdown' => true,
+    'template' => '{review}',
+    'dropdownOptions'=>['class'=>'pull-right dropup','style'=>['disable'=>true]],
+    'dropdownButton'=>['class'=>'btn btn-default btn-xs'],
+    'dropdownButton'=>[
+      'class' => $actionClass,
+      'label'=>$actionLabel,
+      'caret'=>'<span class="caret"></span>',
+    ],
+     'buttons' => [
+          'review' => function ($url, $model) {
+                  return tombolReview($url, $model);
+                },
+    ],
+    'headerOptions'=>[
+      'style'=>[
+        'text-align'=>'center',
+        'width'=>'10px',
+        'font-family'=>'tahoma, arial, sans-serif',
+        'font-size'=>'9pt',
+        'background-color'=>'rgba(73, 162, 182, 1)',
+      ]
+    ],
+    'contentOptions'=>[
+      'style'=>[
+        'text-align'=>'center',
+        'width'=>'10px',
+        'height'=>'10px',
+        'font-family'=>'tahoma, arial, sans-serif',
+        'font-size'=>'9pt',
+      ]
+    ],
+  ];
+
  
 
    $attDinamik[]=[
@@ -243,6 +298,12 @@ $gvstock_obat=GridView::widget([
       
 
 ?>
+<div class="row">
+    <div class="col-md-3 col-md-offset-5">
+      <h3><i class="fa fa-truck" aria-hidden="true"></i> <b><?= Html::encode('Menu Stock Obat')  ?></b></h3>
+    </div>
+</div>
+
 <div class="stock-obatheader-index">
     <?= $gvstock_obat ?>
 </div>

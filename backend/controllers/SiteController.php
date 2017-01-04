@@ -6,6 +6,7 @@ use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use common\models\LoginForm;
+use backend\master\models\Pasien;
 
 /**
  * Site controller
@@ -66,7 +67,11 @@ class SiteController extends Controller
             return $this->redirect(['login']);
         } else {
 
-            return $this->render('index');
+            $jumlah_pasien = Pasien::find()->count(); //jumlah pasien
+
+            return $this->render('index',[
+                'jumlah_pasien'=>$jumlah_pasien
+                ]);
         }
 
     }

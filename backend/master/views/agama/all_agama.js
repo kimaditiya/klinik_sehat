@@ -9,7 +9,7 @@ $.fn.modal.Constructor.prototype.enforceFocus = function(){};
 
 
 
-$(document).on('click', '[data-toggle-delete-erp]', function(e){
+$(document).on('click', '[data-toggle-delete-erp-agama]', function(e){
 
   e.preventDefault();
   var keysSelect1 = $('#gv-agama-id').yiiGridView('getSelectedRows');
@@ -24,15 +24,20 @@ $(document).on('click', '[data-toggle-delete-erp]', function(e){
   $('#submit-agama').click(function(){
        /* when the submit button in the modal is clicked, submit the form */
        $.ajax({
-               url: yiiOptions.deleteurlagama,
+               url: yiiOptionsagama.deleteurlagama,
                //cache: true,
                type: 'POST',
                data:{keysSelect:keysSelect1},
                dataType: 'json',
+                beforeSend: function() {
+                $("#agama-loading-id").show();
+                },
+                complete: function(){
+                  $("#agama-loading-id").hide();
+                }, 
                success: function(result) {
                  if (result == 1){
                      $.pjax.reload('#gv-agama-id');
-
                  }
                   else {
                     alert('error ');

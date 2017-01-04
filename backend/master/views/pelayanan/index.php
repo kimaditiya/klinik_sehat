@@ -40,7 +40,7 @@ function tombolCreate(){
       $url =  Url::toRoute(['/master/pelayanan/']);
       $options = ['id'=>'pelayanan-id-refresh',
                   'data-pjax' => 0,
-                  'class'=>"btn btn-info btn-xs",
+                  'class'=>"btn btn-warning btn-xs",
                 ];
       $icon = '<span class="fa fa-history fa-lg"></span>';
       $label = $icon . ' ' . $title;

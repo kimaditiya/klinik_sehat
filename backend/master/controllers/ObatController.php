@@ -13,6 +13,7 @@ use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\web\Response;
 use yii\helpers\Json;
+use yii\helpers\Url;
 
 /**
  * ObatController implements the CRUD actions for Obat model.
@@ -60,6 +61,14 @@ class ObatController extends Controller
 
      if($paramCari != ''){
         $cari=['kd_obat'=>$paramCari];
+
+         $url = Url::toRoute(['/master/obat/view','id'=>$paramCari]);
+             $js='$("#modal-view-obats").modal("show")
+              .find("#modalContentviewobats").html("<i class=\"fa fa-2x fa-spinner fa-spin\"></i>")
+              .load("'.$url.'")';
+              
+           $this->getView()->registerJs($js);
+
       }else{
         $cari='';
       };

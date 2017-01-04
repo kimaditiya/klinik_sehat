@@ -14,10 +14,13 @@ use backend\master\models\RekamHeader;
 use backend\master\models\DetailRekamMedisSearch;
 use backend\master\models\DetailRekamMedis;
 use backend\master\models\Obat;
-use backend\master\models\PostRekamMedis;
+use backend\master\models\TypeObat;
+use backend\master\models\RekamdosisObat;
 use yii\web\Response;
 use yii\helpers\Json;
+use yii\widgets\ActiveForm;
 use ptrnov\postman4excel\Postman4ExcelBehavior;
+use yii\helpers\Url;
 
 /**
  * PasienController implements the CRUD actions for Pasien model.
@@ -71,6 +74,18 @@ class PasienController extends Controller
 
         return $valStt = ArrayHelper::map($aryStt, 'STATUS', 'STT_NM');
     }
+
+
+
+     #list array jenis kelamin
+    public function ary_jenis_kelamin(){
+        $ary_kelamin= [
+          ['id' => 1, 'jenis' => 'Male'],
+          ['id' => 0, 'jenis' => 'Female'],
+        ];
+
+        return $valStt = ArrayHelper::map($ary_kelamin, 'id', 'jenis');
+    }
     
 
     /**
@@ -84,6 +99,13 @@ class PasienController extends Controller
 
          if($paramCari != ''){
             $cari=['id'=>$paramCari];
+            $url = Url::toRoute(['/master/pasien/view','id'=>$paramCari]);
+            $js='$("#modalpasien-view").modal("show")
+              .find("#modalContentpasienview").html("<i class=\"fa fa-2x fa-spinner fa-spin\"></i>")
+              .load("'.$url.'")';
+              
+            $this->getView()->registerJs($js);
+
           }else{
             $cari='';
           };
@@ -129,7 +151,7 @@ class PasienController extends Controller
 
                 if (isset($posted['pekerjaan'])) {
                     $model->save();
-                    $output = $model->nama_pasien;                 
+                    $output = $model->pekerjaan;                 
                 }
                 if (isset($posted['telp'])) {
                     $model->save();
@@ -179,18 +201,45 @@ class PasienController extends Controller
         ]);
     }
 
+     public function actionValidPasien()
+    {
+      # code...
+        $model = new Pasien();
+      if(Yii::$app->request->isAjax && $model->load($_POST))
+      {
+        Yii::$app->response->format = 'json';
+        return ActiveForm::validate($model);
+      }
+    }
 
-    public function actionPilihExport($idx){
 
-      $tes = explode(',',$idx);
+    public function actionValidDosis()
+    {
+      # code...
+        $model = new RekamdosisObat();
+      if(Yii::$app->request->isAjax && $model->load($_POST))
+      {
+        Yii::$app->response->format = 'json';
+        return ActiveForm::validate($model);
+      }
+    }
 
-       foreach ($tes as  $value) {
+
+    public function actionPilihExport(array $idx){
+
+      if(is_array($idx)){
+        $array_id = explode(',',$idx[0]);
+
+        foreach ($array_id as  $value) {
               
               $id[] = $value; 
           }
-  
-        $data_pasien = Pasien::find()->where(['id'=>$id])->all();
-        $data_export = ArrayHelper::toArray($data_pasien, [
+      }
+      
+      $data_pasien = Pasien::find()->where(['id'=>$id])->all();
+
+      if(!empty($data_pasien)){
+         $data_export = ArrayHelper::toArray($data_pasien, [
             'backend\master\models\Pasien' => [
                 'kd_pasien',
                 'nama_pasien',
@@ -203,6 +252,10 @@ class PasienController extends Controller
                 'nomerLama',
             ],
         ]);
+      }else{
+        return $this->redirect(['index']);
+      }
+       
 
        $excel_data = Postman4ExcelBehavior::excelDataFormat($data_export);
         $excel_title = $excel_data['excel_title'];
@@ -280,6 +333,10 @@ class PasienController extends Controller
                     ->delete(DetailRekamMedis::tableName(), ['id_pasien'=>$id])
                     ->execute();
 
+                    Yii::$app->db->createCommand()
+                    ->delete(RekamdosisObat::tableName(), ['id_pasien'=>$id])
+                    ->execute();
+
                     // ...other DB operations...
                     $transaction->commit();
                 } catch(\Exception $e) {
@@ -294,6 +351,110 @@ class PasienController extends Controller
        }
 
 
+
+     /**
+     * delete using ajax.
+     * @author wawan
+     * @since 1.1.0
+     * @return mixed
+     */
+   public function actionDeleteDetail(){
+
+            if (Yii::$app->request->isAjax) {
+
+                Yii::$app->response->format = Response::FORMAT_JSON;
+                $request= Yii::$app->request;
+                $dataKeySelect=$request->post('keysSelect');
+                foreach ($dataKeySelect as $key => $value) {
+              
+                   $id[] = $value; 
+             }
+
+
+             $transaction  = Yii::$app->db->beginTransaction();
+            try {
+                   
+
+                    Yii::$app->db->createCommand()
+                    ->delete(DetailRekamMedis::tableName(), ['id'=>$id])
+                    ->execute();
+
+                    Yii::$app->db->createCommand()
+                    ->delete(RekamdosisObat::tableName(), ['id_detail_medis'=>$id])
+                    ->execute();
+
+                    // ...other DB operations...
+                    $transaction->commit();
+                } catch(\Exception $e) {
+                    $transaction->rollBack();
+                    throw $e;
+                }
+             
+             }
+         
+         return true;
+   
+       }
+
+
+        /**
+     * delete using ajax.
+     * @author wawan
+     * @since 1.1.0
+     * @return mixed
+     */
+   public function actionDeleteDosis(){
+
+            if (Yii::$app->request->isAjax) {
+
+                Yii::$app->response->format = Response::FORMAT_JSON;
+                $request= Yii::$app->request;
+                $id_data=$request->post('id');
+               
+                Yii::$app->db->createCommand()
+                ->delete(RekamdosisObat::tableName(), ['id_dosis'=>$id_data])
+                ->execute();
+
+                    
+             }
+         
+         return true;
+   
+       }
+
+
+    /**
+     * Depdrop type obat
+     * @author wawan
+     * @since 1.1.0
+     * @return mixed
+     */
+   public function actionListObat() {
+    $out = [];
+    if (isset($_POST['depdrop_parents'])) {
+        $parents = $_POST['depdrop_parents'];
+        if ($parents != null) {
+            $id = $parents[0];
+            $model = Obat::find()->asArray()->where(['id_type_obat'=>$id])
+                                                    ->all();
+            //$out = self::getSubCatList($cat_id);
+            // the getSubCatList function will query the database based on the
+            // cat_id and return an array like below:
+            // [
+            //    ['id'=>'<sub-cat-id-1>', 'name'=>'<sub-cat-name1>'],
+            //    ['id'=>'<sub-cat_id_2>', 'name'=>'<sub-cat-name2>']
+            // ]
+            foreach ($model as $key => $value) {
+                   $out[] = ['id'=>$value['kd_obat'],'name'=> $value['nama_obat']];
+               }
+               echo json_encode(['output'=>$out, 'selected'=>'']);
+               return;
+           }
+       }
+       echo Json::encode(['output'=>'', 'selected'=>'']);
+   }
+
+
     /**
      * Displays a single Pasien model.
      * @param string $id
@@ -301,27 +462,40 @@ class PasienController extends Controller
      */
     public function actionView($id)
     {
+      $model = $this->findModel($id);
 
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+      if ($model->load(Yii::$app->request->post())) {
+          $model->user_update = Yii::$app->user->identity ->id;
+          $model->date_update = date('Y-m-d h:i:s');
+          $model->save();
+          return $this->redirect(['index', 'id' => $model->id]);
+        } else {
+            return $this->renderAjax('view', [
+                'model' => $model,
+                'data_agama' => self::ary_agama()
+            ]);
+        }
     }
 
     public function ary_obat(){
          return ArrayHelper::map(Obat::find()->all(),'kd_obat','nama_obat');
     }
 
+    public function ary_type_obat(){
+         return ArrayHelper::map(TypeObat::find()->all(),'id_type','type_obat');
+    }
+
     public function actionCreateRekammedis($id,$kd){
-        $model = new PostRekamMedis();
+        $model = new DetailRekamMedis();
 
         if ($model->load(Yii::$app->request->post())) {
-
-             $model->saveDetailRekam();
-            return $this->redirect(['review-pasien', 'id' => $model->id,'kd'=>$model->kd_pasien]);
+            $model->kd_rekam_medis = $kd;
+            $model->id_pasien = $id;
+            $model->save();
+            return $this->redirect(['review-pasien','id'=>$model->id_pasien]);
         } else {
             return $this->renderAjax('_form_detail_rekam', [
                 'model' => $model,
-                'items'=>self::ary_obat(),
             ]);
         }
 
@@ -343,9 +517,66 @@ class PasienController extends Controller
 
         $searchModel = new DetailRekamMedisSearch($cari);
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        if(Yii::$app->request->post('hasEditable'))
+        {
+            $ID = \Yii::$app->request->post('editableKey');
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            $model = DetailRekamMedis::findOne($ID);
+           
+            $out = Json::encode(['output'=>'', 'message'=>'']);
+
+            // fetch the first entry in posted data (there should
+            // only be one entry anyway in this array for an
+            // editable submission)
+            // - $posted is the posted data for Book without any indexes
+            // - $post is the converted array for single model validation
+            $post = [];
+            $posted = current($_POST['DetailRekamMedis']);
+            $post['DetailRekamMedis'] = $posted;
+
+
+            // load model like any single model validation
+            if ($model->load($post)) {
+                // can save model or do something before saving model
+
+
+                // custom output to return to be displayed as the editable grid cell
+                // data. Normally this is empty - whereby whatever value is edited by
+                // in the input by user is updated automatically.
+                $output = '';
+
+                $msg = '';
+         
+          
+                if (isset($posted['tanggal'])) {
+                    $model->save();
+                    $output = $model->tanggal;                 
+                }
+
+                if (isset($posted['cek_fisik'])) {
+                    $model->save();
+                    $output = $model->cek_fisik;                 
+                }
+
+                // specific use case where you need to validate a specific
+                // editable column posted when you have more than one
+                // EditableColumn in the grid view. We evaluate here a
+                // check to see if buy_amount was posted for the Book model
+                // similarly you can check if the name attribute was posted as well
+
+                $out = Json::encode(['output'=>$output, 'message'=>$msg]);
+
+
+            // return ajax json encoded response and exit
+            echo $out;
+
+            return;
+          }
+        }
         
         return $this->render('reveiw', [
-            'model' => $this->findModel($id),
+            'modelx' => $this->findModel($id),
             'searchModel'=>$searchModel,
             'dataProvider'=>$dataProvider
         ]);
@@ -355,6 +586,7 @@ class PasienController extends Controller
     public function ary_agama(){
         return ArrayHelper::map(Agama::find()->all(),'id_agama','nama_agama');
     }
+
 
     /**
      * Creates a new Pasien model.
@@ -391,6 +623,38 @@ class PasienController extends Controller
             return $this->renderAjax('create', [
                 'model' => $model,
                 'ary_agama'=>self::ary_agama(),
+                'ary_jenis_kelamin'=>self::ary_jenis_kelamin()
+            ]);
+        }
+    }
+
+
+
+    /**
+     * Creates a new Pasien model.
+     * If creation is successful, the browser will be redirected to the 'view' page.
+     * @return mixed
+     */
+    public function actionCreateDosis($id,$kd)
+    {
+        $model = new RekamdosisObat();
+
+        if ($model->load(Yii::$app->request->post())) {
+            $model->id_detail_medis = $kd;
+            $model->id_pasien = $id;
+            $model->user_create = Yii::$app->user->identity ->id;
+            $model->date_create = date('Y-m-d h:i:s');
+            if($model->save()){
+              echo 1;
+            }else{
+              echo 0;
+            }
+     
+        } else {
+            return $this->renderAjax('_form_dosis', [
+                'model' => $model,
+                'data_type_obat'=>self::ary_type_obat(),
+                'kd'=>$kd
             ]);
         }
     }
@@ -405,11 +669,15 @@ class PasienController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post())) {
+            $model->user_update = Yii::$app->user->identity ->id;
+            $model->date_update = date('Y-m-d h:i:s');
+            $model->save();
+            return $this->redirect(['index', 'id' => $model->id]);
         } else {
-            return $this->render('update', [
+            return $this->renderAjax('update', [
                 'model' => $model,
+                'data_agama' => self::ary_agama()
             ]);
         }
     }

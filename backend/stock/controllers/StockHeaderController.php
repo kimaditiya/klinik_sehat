@@ -5,9 +5,12 @@ namespace backend\stock\controllers;
 use Yii;
 use backend\stock\models\StockObatheader;
 use backend\stock\models\StockObatheaderSearch;
+use backend\stock\models\StockObatDetailSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
+use yii\helpers\Json;
 
 /**
  * StockHeaderController implements the CRUD actions for StockObatheader model.
@@ -45,16 +48,55 @@ class StockHeaderController extends Controller
     }
 
     /**
+     * delete using ajax.
+     * @author wawan
+     * @since 1.1.0
+     * @return mixed
+     */
+   public function actionPilihDelete(){
+
+            if (Yii::$app->request->isAjax) {
+
+                Yii::$app->response->format = Response::FORMAT_JSON;
+                $request= Yii::$app->request;
+                $dataKeySelect=$request->post('keysSelect');
+                foreach ($dataKeySelect as $key => $value) {
+              
+                   $id[] = $value; 
+             }
+
+            Yii::$app->db->createCommand()
+            ->delete(StockObatheader::tableName(), ['kd_stock_header'=>$id])
+            ->execute();
+             
+         }
+         
+     return true;
+   
+       }
+
+    /**
      * Displays a single StockObatheader model.
      * @param string $id
      * @return mixed
      */
-    public function actionView($id)
+    public function actionReviewStock($id)
     {
-        return $this->render('view', [
+        if($id){
+            $kd_stock_header =['kd_stock_header'=>$id];
+        }else{
+            $kd_stock_header =  "";   
+        }
+        $searchModel = new StockObatdetailSearch($kd_stock_header);
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('detail_stock', [
             'model' => $this->findModel($id),
+            'searchModel'=>$searchModel,
+            'dataProvider'=>$dataProvider
         ]);
     }
+
 
 
     /**

@@ -42,7 +42,7 @@ function tombolCreate(){
       $url =  Url::toRoute(['/master/obat/']);
       $options = ['id'=>'obat-id-refresh',
                   'data-pjax' => 0,
-                  'class'=>"btn btn-info btn-xs",
+                  'class'=>"btn btn-warning btn-xs",
                 ];
       $icon = '<span class="fa fa-history fa-lg"></span>';
       $label = $icon . ' ' . $title;
@@ -410,6 +410,12 @@ foreach($gvHeadColomnBT as $key =>$value[]){
 ]);
 
 ?>
+<div class="row">
+    <div class="col-md-3 col-md-offset-5">
+      <h3><i class="fa fa-truck" aria-hidden="true"></i> <b><?= Html::encode('Menu Obat')  ?></b></h3>
+    </div>
+</div>
+
 <div class="obat-index">
 <?= $gvobat ?>
 </div>
