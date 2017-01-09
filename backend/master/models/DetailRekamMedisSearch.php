@@ -47,7 +47,7 @@ class DetailRekamMedisSearch extends DetailRekamMedis
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'sort' => false
+            'sort' => false,
         ]);
 
         $this->load($params);

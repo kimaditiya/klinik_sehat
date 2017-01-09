@@ -21,6 +21,9 @@ return [
     'stock' => [
             'class' => 'backend\stock\Stock',
         ],
+    'payment' => [
+            'class' => 'backend\payment\payment',
+        ],
         
     'gridview' =>  [
         'class' => '\kartik\grid\Module'

@@ -149,7 +149,7 @@ function tombolCreate(){
   $loading_spinner = Spinner::widget(['preset' => 'large', 'align' => 'center','color' => 'blue', 'caption' => 'Loading','id'=>'pasien-loading-id','hidden'=>true]);
 
 
-    /**
+/**
  * GRID Pasien
  * @author wawan  [aditiya@lukison.com]
  * @since 1.2

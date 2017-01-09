@@ -40,6 +40,7 @@ class StockObatheaderSearch extends StockObatheader
      */
     public function search($params)
     {
+
         $query = StockObatheader::find();
 
         // add conditions that should always apply here
@@ -57,12 +58,19 @@ class StockObatheaderSearch extends StockObatheader
             return $dataProvider;
         }
 
-        // grid filtering conditions
-        $query->andFilterWhere([
-            'tanggal_masuk_stock' => $this->tanggal_masuk_stock,
-        ]);
+        // print_r($this->tanggal_masuk_stock);
+        // die();
+        
 
-        $query->andFilterWhere(['like', 'kd_stock_header', $this->kd_stock_header]);
+        // grid filtering conditions
+        // $query->andFilterWhere([
+        //     'tanggal_masuk_stock' => $this->tanggal_masuk_stock,
+        // ]);
+        if(!empty($this->tanggal_masuk_stock)){
+            $date = explode('to', $this->tanggal_masuk_stock);
+            $query->andFilterWhere(['between', 'tanggal_masuk_stock', $date[0], $date[1]]);
+        }
+        
 
         return $dataProvider;
     }

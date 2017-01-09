@@ -165,6 +165,30 @@ foreach($gvHeadColomnBT as $key =>$value[]){
       $attDinamik[]=[
         'class'=>'kartik\grid\EditableColumn',
         'attribute'=>$value[$key]['FIELD'],
+        'filterType'=>GridView::FILTER_DATE_RANGE,
+        'filterWidgetOptions'=>[
+            'pluginOptions' => [
+              // 'autoclose'=>true,
+              // 'todayHighlight' => true,
+              'convertFormat' => true,
+              // 'useWithAddon'=>true,
+               'showDropdowns'=>true,
+
+             'locale'=>[
+            'format'=>'YYYY-MM-D',
+            'separator'=>' to ',
+        ],
+
+               // 'locale'=>['format' => 'y-m-d'],
+              // 'locale'=>[
+              //   'format'=>'d-M-y',
+              //   'separator'=>' to ',
+              // ],
+              // 'format' => 'yyyy-m-d',
+              // 'format'=>'yyyy-m-d h:i:s'
+          ],
+           'presetDropdown'=>true,
+        ],
         'label'=>$value[$key]['label'],
         'filter'=>true,
         'hAlign'=>'right',

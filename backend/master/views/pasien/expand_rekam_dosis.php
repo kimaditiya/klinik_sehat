@@ -64,7 +64,6 @@ foreach($gvHeadColomnBT as $key =>$value[]){
  
       # code...
       $attDinamik[]=[
-        'class'=>'kartik\grid\EditableColumn',
         'attribute'=>$value[$key]['FIELD'],
         'label'=>$value[$key]['label'],
         'filter'=>true,

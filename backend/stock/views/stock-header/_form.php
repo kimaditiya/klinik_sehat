@@ -19,7 +19,7 @@ use kartik\widgets\DatePicker;
             'autoclose'=>true,
             'todayHighlight' => true,
             'convertFormat' => true,
-            'format' => 'yyyy-m-d',
+            'format' => 'yyyy-mm-d',
             // 'format'=>'yyyy-m-d h:i:s'
         ]
     ]) ?>

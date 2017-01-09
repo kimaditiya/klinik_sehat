@@ -444,9 +444,11 @@ class PasienController extends Controller
             //    ['id'=>'<sub-cat-id-1>', 'name'=>'<sub-cat-name1>'],
             //    ['id'=>'<sub-cat_id_2>', 'name'=>'<sub-cat-name2>']
             // ]
+      
             foreach ($model as $key => $value) {
                    $out[] = ['id'=>$value['kd_obat'],'name'=> $value['nama_obat']];
                }
+            
                echo json_encode(['output'=>$out, 'selected'=>'']);
                return;
            }

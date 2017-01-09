@@ -295,9 +295,6 @@ foreach($gvHeadColomnBT as $key =>$value[]){
 
   };
 
-  
-
-  
 
    $attDinamik[]=[
       'class' => '\kartik\grid\CheckboxColumn',
@@ -395,7 +392,7 @@ foreach($gvHeadColomnBT as $key =>$value[]){
 				<div class="col-md-4"></div>
 			<div class="col-md-4">
 				<dl>
-					<dt style="width:80px; float:left;">Alamat</dt>
+					<dt style="width:100px; float:left;">Alamat Kantor</dt>
 				    <dd>: <b>JL.H.Garif II(lapangan Merah)</b> </dd>
 					<dt style="width:80px; float:left;">RT/RW</dt>
 					<dd>: <b>02/04 No.124 </b></dd>
